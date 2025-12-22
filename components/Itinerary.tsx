@@ -1,6 +1,7 @@
 import React from 'react';
 import { itineraryData } from '../data';
-import { MapPin, ExternalLink, Calendar, Navigation } from 'lucide-react';
+import { MapPin, Calendar, Navigation } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Itinerary: React.FC = () => {
   const openMap = (query: string) => {
@@ -9,54 +10,60 @@ const Itinerary: React.FC = () => {
   };
 
   return (
-    <div className="pb-24 px-4 pt-4">
-      <div className="relative border-l-2 border-gray-200 ml-3 space-y-8">
+    <div className="pb-32 pt-8 px-4">
+      <div className="relative border-l-2 border-dashed border-gray-200 ml-4 space-y-10">
         {itineraryData.map((day, index) => (
-          <div key={index} className="relative pl-8">
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="relative pl-8"
+          >
             {/* Timeline Dot */}
-            <div className="absolute -left-[9px] top-0 h-4 w-4 rounded-full bg-japanBlue border-4 border-white shadow-sm"></div>
-            
-            {/* Date Header */}
-            <div className="flex items-center gap-2 mb-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-gray-100 text-gray-700 text-sm font-bold rounded-full">
-                <Calendar size={14} />
+            <div className="absolute -left-[11px] top-0 h-6 w-6 rounded-full bg-white border-4 border-japanBlue shadow-sm z-10"></div>
+
+            {/* Date Badge */}
+            <div className="flex items-center gap-2 mb-3">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-japanBlue to-indigo-900 text-white text-xs font-bold rounded-full shadow-sm tracking-wide">
+                <Calendar size={12} />
                 {day.date}
               </span>
             </div>
 
             {/* Card */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <div className="p-4 border-b border-gray-100 bg-gray-50/50">
-                <h3 className="text-lg font-bold text-gray-900">{day.title}</h3>
+            <div className="bg-white rounded-2xl shadow-card hover:shadow-float transition-shadow duration-300 overflow-hidden border border-gray-100 group">
+              <div className="p-5 border-b border-gray-50 bg-gray-50/30">
+                <h3 className="text-xl font-bold text-slate-900 group-hover:text-japanBlue transition-colors">{day.title}</h3>
               </div>
-              
-              <div className="p-4">
+
+              <div className="p-5">
                 {/* Activities List */}
-                <ul className="space-y-3 mb-6">
+                <ul className="space-y-4 mb-6">
                   {day.activities.map((activity, actIndex) => (
-                    <li key={actIndex} className="flex items-start gap-2.5 text-gray-700">
-                      <span className="mt-2 w-1.5 h-1.5 rounded-full bg-japanRed flex-shrink-0"></span>
-                      <span className="leading-relaxed">{activity}</span>
+                    <li key={actIndex} className="flex items-start gap-4 text-slate-700">
+                      <span className="mt-2.5 w-1.5 h-1.5 rounded-full bg-rose-400 flex-shrink-0 shadow-sm"></span>
+                      <span className="leading-relaxed font-medium">{activity}</span>
                     </li>
                   ))}
                 </ul>
 
                 {/* Map Buttons */}
                 {day.locations.length > 0 && (
-                  <div className="space-y-2">
-                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">主要地點導航</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="space-y-3 pt-2 border-t border-dashed border-gray-100">
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Map Navigation</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {day.locations.map((loc, locIndex) => (
                         <button
                           key={locIndex}
                           onClick={() => openMap(loc.query)}
-                          className="flex items-center justify-between px-3 py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-sm font-medium transition-colors border border-blue-100 group"
+                          className="flex items-center justify-between px-4 py-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-900 rounded-xl text-sm font-semibold transition-all active:scale-[0.98]"
                         >
-                          <div className="flex items-center gap-2 truncate">
-                            <MapPin size={16} className="text-blue-500" />
+                          <div className="flex items-center gap-2.5 truncate">
+                            <MapPin size={16} className="text-indigo-600" />
                             <span className="truncate">{loc.name}</span>
                           </div>
-                          <Navigation size={14} className="text-blue-400 group-hover:text-blue-600" />
+                          <Navigation size={14} className="text-indigo-400" />
                         </button>
                       ))}
                     </div>
@@ -64,12 +71,12 @@ const Itinerary: React.FC = () => {
                 )}
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
-      
-      <div className="mt-8 text-center text-gray-400 text-sm italic">
-        Have a safe trip! ✈️
+
+      <div className="mt-12 text-center">
+        <p className="text-gray-400 text-sm font-serif italic tracking-wider">Bon Voyage ✨</p>
       </div>
     </div>
   );
