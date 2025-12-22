@@ -1,71 +1,131 @@
 import React, { useState } from 'react';
-import { ClipboardList, Map, Plane } from 'lucide-react';
 import Checklist from './components/Checklist';
 import Itinerary from './components/Itinerary';
-import { Tab } from './types';
+import clsx from 'clsx';
+import { motion, AnimatePresence } from 'framer-motion';
+import { LayoutDashboard, Compass, CalendarDays, Settings, Plane } from 'lucide-react';
 
-const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<Tab>('checklist');
+function App() {
+  const [activeTab, setActiveTab] = useState<'checklist' | 'itinerary'>('checklist');
 
-  return (
-    <div className="min-h-screen bg-softGray font-sans text-slate-800 selection:bg-rose-100">
-      {/* Hero Header */}
-      <header className="bg-japanBlue text-white pt-14 pb-32 px-6 relative overflow-hidden shadow-lg">
-        {/* Decorative Grid */}
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-        <div className="absolute top-0 right-0 p-8 opacity-20 transform translate-x-10 -translate-y-10 rotate-12">
-          <Plane size={180} />
+  // Sidebar Component (Desktop)
+  const Sidebar = () => (
+    <div className="hidden md:flex w-64 flex-col bg-white border-r border-gray-100 h-screen fixed left-0 top-0 z-50">
+      <div className="p-8">
+        <div className="flex items-center gap-3 text-primary mb-8">
+          <div className="p-2 bg-primary text-white rounded-lg">
+            <Plane size={24} />
+          </div>
+          <span className="font-serif text-xl font-bold tracking-tight">TravelLog</span>
         </div>
 
-        <div className="relative z-10">
-          <div className="inline-block px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-xs font-bold tracking-widest text-blue-100 mb-4 border border-white/10 uppercase">
-            Travel Log
+        <nav className="space-y-2">
+          <button
+            onClick={() => setActiveTab('checklist')}
+            className={clsx(
+              "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium text-sm",
+              activeTab === 'checklist' ? "bg-gray-900 text-white shadow-lg shadow-gray-900/20" : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+            )}
+          >
+            <LayoutDashboard size={20} />
+            任務總覽
+          </button>
+          <button
+            onClick={() => setActiveTab('itinerary')}
+            className={clsx(
+              "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium text-sm",
+              activeTab === 'itinerary' ? "bg-gray-900 text-white shadow-lg shadow-gray-900/20" : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+            )}
+          >
+            <Compass size={20} />
+            行程地圖
+          </button>
+        </nav>
+      </div>
+
+      <div className="mt-auto p-8 border-t border-gray-50">
+        <div className="bg-gray-50 rounded-2xl p-4">
+          <p className="text-xs font-bold text-gray-400 uppercase mb-2">旅程倒數</p>
+          <div className="flex items-end gap-1">
+            <span className="text-3xl font-black text-primary">5</span>
+            <span className="text-sm font-medium text-gray-500 mb-1">天</span>
           </div>
-          <h1 className="text-4xl font-extrabold mb-3 tracking-tight drop-shadow-sm">東京之旅 <span className="text-2xl ml-1">🇯🇵</span></h1>
-          <p className="text-blue-100 text-sm font-medium tracking-wide flex items-center gap-2 opacity-90">
-            12/28 – 1/2 <span className="w-1 h-1 rounded-full bg-blue-300"></span> 6 天 5 夜
-          </p>
+          <div className="w-full bg-gray-200 h-1 rounded-full mt-3 overflow-hidden">
+            <div className="bg-accent h-full w-[80%] rounded-full"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-50/50 md:pl-64">
+      <Sidebar />
+
+      {/* Mobile Header */}
+      <header className="md:hidden sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 h-16 flex items-center justify-between">
+        <span className="font-serif text-lg font-bold text-primary">TravelLog</span>
+        <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-xs font-bold text-gray-500">
+          AL
         </div>
       </header>
 
-      {/* Main Content Container - overlaps header */}
-      <main className="max-w-md mx-auto -mt-[100px] relative z-20 px-2">
-        {activeTab === 'checklist' ? <Checklist /> : <Itinerary />}
+      {/* Main Content Area */}
+      <main className="max-w-5xl mx-auto px-4 sm:px-8 py-4 md:py-12">
+        {/* Page Header */}
+        <div className="mb-6 md:mb-12">
+          <motion.h1
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-3xl md:text-5xl font-serif font-black text-primary mb-1 md:mb-2"
+          >
+            {activeTab === 'checklist' ? '行前準備' : '東京之旅'}
+          </motion.h1>
+          <p className="text-gray-400 font-medium text-sm md:text-base">2025/12/28 — 2026/01/02</p>
+        </div>
+
+        <AnimatePresence mode='wait'>
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+          >
+            {activeTab === 'checklist' ? <Checklist /> : <Itinerary />}
+          </motion.div>
+        </AnimatePresence>
       </main>
 
-      {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-100 pb-safe shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)] z-50">
-        <div className="max-w-md mx-auto flex justify-around items-center h-[70px]">
+      {/* Mobile Floating Navigation */}
+      <div className="md:hidden fixed bottom-6 left-6 right-6 z-50 pb-safe">
+        <div className="bg-slate-900 text-white rounded-2xl shadow-float p-2 flex justify-between items-center relative overflow-hidden">
+          <div className="absolute inset-0 bg-white/5 pointer-events-none"></div>
           <button
             onClick={() => setActiveTab('checklist')}
-            className={`flex flex-col items-center justify-center w-full h-full space-y-1.5 transition-colors ${activeTab === 'checklist'
-                ? 'text-japanBlue font-bold'
-                : 'text-gray-400 hover:text-gray-600'
-              }`}
+            className={clsx(
+              "flex-1 py-3 rounded-xl font-medium text-sm flex flex-col items-center gap-1 transition-all",
+              activeTab === 'checklist' ? "bg-white/20 text-white font-bold" : "text-white/60 hover:text-white"
+            )}
           >
-            <ClipboardList size={26} strokeWidth={activeTab === 'checklist' ? 2.5 : 2} />
-            <span className="text-[10px] font-medium tracking-wide">行前清單</span>
+            <LayoutDashboard size={20} />
+            <span className="text-[10px]">待辦事項</span>
           </button>
-
-          <div className="w-px h-8 bg-gradient-to-b from-transparent via-gray-200 to-transparent"></div>
-
+          <div className="w-px h-8 bg-white/10"></div>
           <button
             onClick={() => setActiveTab('itinerary')}
-            className={`flex flex-col items-center justify-center w-full h-full space-y-1.5 transition-colors ${activeTab === 'itinerary'
-                ? 'text-japanRed font-bold'
-                : 'text-gray-400 hover:text-gray-600'
-              }`}
+            className={clsx(
+              "flex-1 py-3 rounded-xl font-medium text-sm flex flex-col items-center gap-1 transition-all",
+              activeTab === 'itinerary' ? "bg-white/20 text-white font-bold" : "text-white/60 hover:text-white"
+            )}
           >
-            <Map size={26} strokeWidth={activeTab === 'itinerary' ? 2.5 : 2} />
-            <span className="text-[10px] font-medium tracking-wide">每日行程</span>
+            <Compass size={20} />
+            <span className="text-[10px]">行程地圖</span>
           </button>
         </div>
-      </nav>
-
-      {/* Safe area spacer for mobile (bottom nav coverage) */}
-      <div className="h-20"></div>
+      </div>
     </div>
   );
-};
+}
 
 export default App;

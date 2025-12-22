@@ -8,26 +8,34 @@ export default {
   theme: {
     extend: {
       colors: {
-        japanRed: '#bc002d',
-        japanBlue: '#0f2350',
-        softGray: '#f5f5f7',
-        sakura: '#fdeff2',
-        indigo: {
-          900: '#0f2350', // Re-mapped japanBlue
-          50: '#f0f4ff',
+        // "Tokyo Zen" Palette
+        primary: {
+          DEFAULT: '#1a1a1a', // Soft Black for text
+          50: '#f9f9f9',
+          100: '#f0f0f0',
+          900: '#1a1a1a',
         },
-        slate: {
-          800: '#1e293b',
-          900: '#0f172a',
+        accent: {
+          DEFAULT: '#e11d48', // Refined Red (Pantone-like)
+          light: '#fff1f2', // Soft pink background
         },
+        surface: {
+          DEFAULT: '#ffffff',
+          alt: '#fdfdfd',
+        },
+        divider: '#f0f0f0',
       },
       fontFamily: {
-        sans: ['Inter', 'Noto Sans JP', 'sans-serif'],
+        sans: ['"Inter"', '"Noto Sans JP"', 'sans-serif'],
+        serif: ['"Playfair Display"', 'serif'], // Added for editorial feel
       },
       boxShadow: {
-        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
-        'card': '0 0 0 1px rgba(0,0,0,0.03), 0 2px 8px rgba(0,0,0,0.04)',
-        'float': '0 10px 40px -10px rgba(0,0,0,0.08)',
+        'subtle': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+        'float': '0 20px 40px -4px rgba(0, 0, 0, 0.08)',
+        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
       }
     },
   },
