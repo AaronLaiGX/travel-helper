@@ -1,0 +1,5 @@
+{
+  "name": "Tokyo Travel Companion",
+  "description": "A comprehensive travel planner including a packing checklist and daily itinerary with map integration for a trip to Tokyo.",
+  "requestFramePermissions": []
+}
