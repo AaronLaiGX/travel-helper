@@ -1,20 +1,57 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Tokyo Travel Companion 🇯🇵
 
-# Run and deploy your AI Studio app
+A React application helper for a trip to Tokyo, built with Vite, React, TypeScript, and Tailwind CSS.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/drive/1t19ZiXGa-CrHcO2i8YXP_BdwQz6uUXpx
+- **Checklist**: Pre-travel checklist management.
+- **Itinerary**: Day-by-day itinerary view.
+- **Responsive Design**: Mobile-first design suitable for travel usage.
 
-## Run Locally
+## Tech Stack
 
-**Prerequisites:**  Node.js
+- **Framework**: React 19
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS
+- **Icons**: Lucide React
+- **Language**: TypeScript
 
+## Getting Started
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### Prerequisites
+
+- Node.js (v18 or higher)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository
+   ```bash
+   git clone https://github.com/yourusername/tokyo-travel-companion.git
+   ```
+
+2. Install dependencies
+   ```bash
+   npm install
+   ```
+
+3. Start the development server
+   ```bash
+   npm run dev
+   ```
+
+## Building for Production
+
+To build the app for production:
+
+```bash
+npm run build
+```
+
+## Deployment
+
+This project is configured to deploy to GitHub Pages automatically via GitHub Actions.
+
+1. Go to your repository **Settings** > **Pages**.
+2. Under "Build and deployment", select **GitHub Actions** as the source.
+3. Push to `main` branch to trigger the deployment.
