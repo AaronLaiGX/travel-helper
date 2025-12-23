@@ -1,9 +1,13 @@
 import React from 'react';
-import { itineraryData } from '../data';
+import { ItineraryDay } from '../types';
 import { MapPin, ArrowUpRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const Itinerary: React.FC = () => {
+interface ItineraryProps {
+  data: ItineraryDay[];
+}
+
+const Itinerary: React.FC<ItineraryProps> = ({ data }) => {
   const openMap = (query: string) => {
     const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
     window.open(url, '_blank');
@@ -16,7 +20,7 @@ const Itinerary: React.FC = () => {
         <div className="absolute left-[19px] top-4 bottom-0 w-[1px] bg-gray-200"></div>
 
         <div className="space-y-8 md:space-y-12">
-          {itineraryData.map((day, index) => {
+          {data.map((day, index) => {
             // Extract "12/28" and "（日）"
             const match = day.date.match(/(\d+\/\d+)(.*)/);
             const dateNum = match ? match[1] : day.date;

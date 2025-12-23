@@ -6,7 +6,7 @@ export const checklistData: ChecklistCategory[] = [
     title: '重要文件（出門前必檢）',
     icon: 'FileText',
     items: [
-      { id: 'd1', text: '護照（有效期限 ≥ 6 個月）' },
+      { id: 'd1', text: '護照（有效期限 ≥ 12 個月）' },
       { id: 'd2', text: '機票／電子登機證（ANA）' },
       { id: 'd3', text: '飯店訂房資料' },
       { id: 'd4', text: '信用卡（至少 1–2 張）' },

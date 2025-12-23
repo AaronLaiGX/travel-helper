@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { checklistData } from '../data';
+import { ChecklistCategory } from '../types';
 import { Circle, CheckCircle2, RefreshCcw, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import * as Icons from 'lucide-react';
 
-const Checklist: React.FC = () => {
+interface ChecklistProps {
+  data: ChecklistCategory[];
+}
+
+const Checklist: React.FC<ChecklistProps> = ({ data }) => {
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>(() => {
     const saved = localStorage.getItem('checklist-state');
     return saved ? JSON.parse(saved) : {};
@@ -37,8 +41,8 @@ const Checklist: React.FC = () => {
       // If incomplete (Default: Open) -> User clicked -> Wants Close (false)
       // If complete (Default: Closed) -> User clicked -> Wants Open (true)
 
-      // Does this component have access to data to check completion? Yes, 'checklistData' and 'checkedItems'.
-      const category = checklistData.find(c => c.id === id);
+      // Does this component have access to data to check completion? Yes, 'data' and 'checkedItems'.
+      const category = data.find(c => c.id === id);
       if (!category) return prev;
 
       const catTotal = category.items.length;
@@ -58,7 +62,7 @@ const Checklist: React.FC = () => {
   };
 
   // Calculate Progress
-  const totalItems = checklistData.reduce((acc, cat) => acc + cat.items.length, 0);
+  const totalItems = data.reduce((acc, cat) => acc + cat.items.length, 0);
   const completedItems = Object.values(checkedItems).filter(Boolean).length;
   const progress = Math.round((completedItems / totalItems) * 100);
 
@@ -86,7 +90,7 @@ const Checklist: React.FC = () => {
 
       {/* Categories */}
       <div className="grid grid-cols-1 gap-4 md:gap-6">
-        {checklistData.map((category) => {
+        {data.map((category) => {
           const Icon = Icons[category.icon as keyof typeof Icons] as any;
           const catTotal = category.items.length;
           const catCompleted = category.items.filter(i => checkedItems[i.id]).length;

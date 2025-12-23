@@ -1,18 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Checklist from './components/Checklist';
 import Itinerary from './components/Itinerary';
+import { fetchTravelData, TravelData } from './src/services/api';
 import clsx from 'clsx';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutDashboard, Compass, CalendarDays, Settings, Plane } from 'lucide-react';
 
 function App() {
   const [activeTab, setActiveTab] = useState<'checklist' | 'itinerary'>('checklist');
+  const [data, setData] = useState<TravelData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchTravelData().then(fetchedData => {
+      setData(fetchedData);
+      setLoading(false);
+    });
+  }, []);
 
   React.useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [activeTab]);
 
-  // Sidebar Component (Desktop)
   const Sidebar = () => (
     <div className="hidden md:flex w-64 flex-col bg-white border-r border-gray-100 h-screen fixed left-0 top-0 z-50">
       <div className="p-8">
@@ -62,6 +71,19 @@ function App() {
     </div>
   );
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="flex flex-col items-center gap-4">
+          <div className="p-4 bg-primary text-white rounded-2xl animate-bounce">
+            <Plane size={32} />
+          </div>
+          <p className="text-gray-400 font-medium animate-pulse">Loading adventure...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50/50 md:pl-64">
       <Sidebar />
@@ -96,7 +118,11 @@ function App() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.15 }}
           >
-            {activeTab === 'checklist' ? <Checklist /> : <Itinerary />}
+            {activeTab === 'checklist' ? (
+              data && <Checklist data={data.checklist} />
+            ) : (
+              data && <Itinerary data={data.itinerary} />
+            )}
           </motion.div>
         </AnimatePresence>
       </main>
