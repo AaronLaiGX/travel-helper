@@ -99,8 +99,6 @@ const Checklist: React.FC = () => {
             <motion.div
               key={category.id}
               layout
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
               className={clsx(
                 "group bg-white rounded-2xl overflow-hidden transition-all duration-300 border",
                 isAllChecked ? "border-gray-100 opacity-60 hover:opacity-100" : "shadow-sm border-gray-100/50 hover:shadow-lg hover:border-gray-200"
@@ -112,13 +110,8 @@ const Checklist: React.FC = () => {
                 className="p-6 flex items-center justify-between cursor-pointer select-none"
               >
                 <div className="flex items-center gap-5">
-                  <div className={clsx(
-                    "p-3 rounded-2xl transition-all duration-300",
-                    isAllChecked ? "bg-gray-100 text-gray-400" : "bg-primary text-white shadow-lg shadow-primary/20"
-                  )}>
-                    {Icon ? <Icon size={20} strokeWidth={2} /> : <Icons.Circle size={20} />}
-                  </div>
-                  <div>
+                  {/* Icon removed as per user request */}
+                  <div className="pl-2">
                     <h3 className={clsx("text-lg font-bold transition-colors", isAllChecked ? "text-gray-400" : "text-primary")}>
                       {category.title}
                     </h3>

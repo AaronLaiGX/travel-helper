@@ -8,6 +8,10 @@ import { LayoutDashboard, Compass, CalendarDays, Settings, Plane } from 'lucide-
 function App() {
   const [activeTab, setActiveTab] = useState<'checklist' | 'itinerary'>('checklist');
 
+  React.useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [activeTab]);
+
   // Sidebar Component (Desktop)
   const Sidebar = () => (
     <div className="hidden md:flex w-64 flex-col bg-white border-r border-gray-100 h-screen fixed left-0 top-0 z-50">
@@ -71,7 +75,7 @@ function App() {
       </header>
 
       {/* Main Content Area */}
-      <main className="max-w-5xl mx-auto px-4 sm:px-8 py-4 md:py-12">
+      <main className="max-w-5xl mx-auto px-4 sm:px-8 py-4 md:py-12 pb-32 md:pb-12">
         {/* Page Header */}
         <div className="mb-6 md:mb-12">
           <motion.h1
@@ -90,7 +94,7 @@ function App() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.15 }}
           >
             {activeTab === 'checklist' ? <Checklist /> : <Itinerary />}
           </motion.div>
