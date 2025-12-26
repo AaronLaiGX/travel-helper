@@ -11,20 +11,33 @@ const db = admin.firestore();
 async function seed() {
     const batch = db.batch();
 
-    // Defines the data manually here to avoid TS compilation issues for this simple script
-    // In a real app we might import this, but since data.ts is TS and this is JS (or needs ts-node), copy-paste is safer for the user's immediate "run once" need.
+    // List of IDs to remove from Firestore
+    const itemsToDelete = [
+        'b7', 'b9', // Earphones, Wipes
+        'c7', 'c8', 'c9', // Camera gear extra
+        'cl6', // Pajamas
+        'p6', // Glasses
+        'l4' // Luggage lock
+    ];
+
+    // Delete removed items
+    for (const id of itemsToDelete) {
+        batch.delete(db.collection('items').doc(id));
+    }
+
     const checklistData = [
         {
             id: 'docs',
             title: '重要文件（出門前必檢）',
             icon: 'FileText',
             items: [
-                { id: 'd1', text: '護照（有效期限 ≥ 12 個月）' },
+                { id: 'd1', text: '護照（有效期限 ≥ 3 個月）' },
                 { id: 'd2', text: '機票／電子登機證（ANA）' },
                 { id: 'd3', text: '飯店訂房資料' },
                 { id: 'd4', text: '信用卡（至少 1–2 張）' },
                 { id: 'd5', text: '日圓現金（¥10,000–20,000）' },
                 { id: 'd6', text: '旅遊保險（電子或紙本）' },
+                { id: 'd7', text: 'Comiket 入場券' },
             ],
         },
         {
@@ -38,9 +51,7 @@ async function seed() {
                 { id: 'b4', text: '行動電源' },
                 { id: 'b5', text: '充電線（USB-C / Lightning）' },
                 { id: 'b6', text: '多孔充電器（100–240V）' },
-                { id: 'b7', text: '耳機' },
                 { id: 'b8', text: '口罩' },
-                { id: 'b9', text: '濕紙巾／酒精擦' },
                 { id: 'b10', text: '輕便雨具' },
             ],
         },
@@ -55,9 +66,6 @@ async function seed() {
                 { id: 'c4', text: '記憶卡（備用）' },
                 { id: 'c5', text: '行動電源（高容量）' },
                 { id: 'c6', text: '相機背帶／快扣' },
-                { id: 'c7', text: '帽子' },
-                { id: 'c8', text: '防風外套' },
-                { id: 'c9', text: '好走的鞋' },
             ],
         },
         {
@@ -70,7 +78,6 @@ async function seed() {
                 { id: 'cl3', text: '內衣褲' },
                 { id: 'cl4', text: '襪子（多帶）' },
                 { id: 'cl5', text: '外套' },
-                { id: 'cl6', text: '睡衣' },
             ],
         },
         {
@@ -81,9 +88,8 @@ async function seed() {
                 { id: 'p1', text: '牙刷／牙膏' },
                 { id: 'p2', text: '洗面乳／保養品' },
                 { id: 'p3', text: '防曬' },
-                { id: 'p4', text: '常用藥' },
+                { id: 'p4', text: '營養品' },
                 { id: 'p5', text: '太陽眼鏡' },
-                { id: 'p6', text: '眼鏡／隱形眼鏡（若有）' },
             ],
         },
         {
@@ -94,7 +100,6 @@ async function seed() {
                 { id: 'l1', text: '隨身後背包' },
                 { id: 'l2', text: '登機箱（20–22 吋）' },
                 { id: 'l3', text: '28 吋托運行李箱' },
-                { id: 'l4', text: '行李鎖' },
                 { id: 'l5', text: '可折疊購物袋' },
             ],
         },
@@ -132,6 +137,98 @@ async function seed() {
         },
     ];
 
+    const itineraryData = [
+        {
+            date: '12/28（日）',
+            title: '抵達東京',
+            activities: [
+                '台北松山 → 東京羽田（ANA）',
+                '前往 東品川哈頓酒店 入住',
+                '便利商店補給、整理器材、休息',
+            ],
+            locations: [
+                { name: '東京羽田機場', query: 'Haneda Airport' },
+                { name: '東品川哈頓酒店', query: 'Hearton Hotel Higashi-Shinagawa' },
+            ],
+        },
+        {
+            date: '12/29（一）',
+            title: '購物日（衣物為主）＋美食',
+            activities: [
+                '品川一帶散步',
+                '築地吃壽司',
+                '銀座購物（UNIQLO / GU / MUJI / 選物店）',
+                '銀座印度料理晚餐',
+                '回飯店休息',
+            ],
+            locations: [
+                { name: '品川', query: 'Shinagawa Station' },
+                { name: '築地場外市場', query: 'Tsukiji Outer Market' },
+                { name: '銀座', query: 'Ginza Tokyo' },
+                { name: 'UNIQLO 銀座', query: 'UNIQLO Ginza' },
+            ],
+        },
+        {
+            date: '12/30（二）',
+            title: 'Comiket Day 1',
+            activities: [
+                '前往東京 Big Sight',
+                '全天拍 Coser（不買本、不排午餐）',
+                '西館外 / 南館外 / 水上公園',
+                '下午收工回飯店',
+            ],
+            locations: [
+                { name: '東京 Big Sight', query: 'Tokyo Big Sight' },
+                { name: '東京 Big Sight 西展示棟', query: 'Tokyo Big Sight West Exhibition Hall' },
+            ],
+        },
+        {
+            date: '12/31（三）',
+            title: 'Comiket Day 2',
+            activities: [
+                '前往東京 Big Sight',
+                '全天拍 Coser（角色風格不同）',
+                '西館外 / 南館外 / 水上公園',
+                '下午收工，晚上休息',
+            ],
+            locations: [
+                { name: '東京 Big Sight', query: 'Tokyo Big Sight' },
+                { name: '水之廣場公園', query: 'Mizu no Hiroba Park' },
+            ],
+        },
+        {
+            date: '1/1（四）',
+            title: '台場逛街＋購物＋動漫',
+            activities: [
+                '台場一日遊',
+                '逛街、買衣物（Aqua City, DECKS, DiverCity）',
+                '動漫商品（Gundam Base、周邊、扭蛋）',
+                '晚餐在台場解決',
+                '回飯店',
+            ],
+            locations: [
+                { name: 'Aqua City Odaiba', query: 'Aqua City Odaiba' },
+                { name: 'DECKS Tokyo Beach', query: 'DECKS Tokyo Beach' },
+                { name: 'DiverCity Tokyo Plaza', query: 'DiverCity Tokyo Plaza' },
+                { name: 'The Gundam Base Tokyo', query: 'The Gundam Base Tokyo' },
+            ],
+        },
+        {
+            date: '1/2（五）',
+            title: '回台灣',
+            activities: [
+                '退房',
+                '前往羽田機場',
+                '東京羽田 → 台北松山（ANA）',
+                '205',
+            ],
+            locations: [
+                { name: '東品川哈頓酒店', query: 'Hearton Hotel Higashi-Shinagawa' },
+                { name: '東京羽田機場', query: 'Haneda Airport' },
+            ],
+        },
+    ];
+
     let order = 0;
     for (const cat of checklistData) {
         // 1. Set Category
@@ -144,19 +241,32 @@ async function seed() {
 
         // 2. Set Items
         for (const item of cat.items) {
-            // Use a composite key or auto-id, here we use item.id as doc id if unique, or auto
-            // Using item.id as doc id for easier management
+            // Use item.id as doc id for easier management
             const itemRef = db.collection('items').doc(item.id);
             batch.set(itemRef, {
                 categoryId: cat.id,
                 text: item.text,
-                id: item.id // Store it as field too just in case
+                id: item.id
             });
         }
     }
 
+    let dayOrder = 0;
+    for (const day of itineraryData) {
+        // Use date as ID, but clean it up for safety if needed (or just use index/auto-id)
+        // Here we use a prefix + order to keep it sorted nicely
+        const dayRef = db.collection('itinerary').doc(`day_${dayOrder}`);
+        batch.set(dayRef, {
+            date: day.date,
+            title: day.title,
+            activities: day.activities,
+            locations: day.locations,
+            order: dayOrder++
+        });
+    }
+
     await batch.commit();
-    console.log('Migration completed successfully!');
+    console.log('Migration of Checklist AND Itinerary completed successfully!');
 }
 
 seed().catch(console.error);

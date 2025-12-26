@@ -22,6 +22,15 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [activeTab]);
 
+  const [daysRemaining, setDaysRemaining] = useState(0);
+
+  useEffect(() => {
+    const targetDate = new Date('2025-12-28T00:00:00');
+    const now = new Date();
+    const diff = targetDate.getTime() - now.getTime();
+    setDaysRemaining(Math.ceil(diff / (1000 * 60 * 60 * 24)));
+  }, []);
+
   const Sidebar = () => (
     <div className="hidden md:flex w-64 flex-col bg-white border-r border-gray-100 h-screen fixed left-0 top-0 z-50">
       <div className="p-8">
@@ -60,7 +69,7 @@ function App() {
         <div className="bg-gray-50 rounded-2xl p-4">
           <p className="text-xs font-bold text-gray-400 uppercase mb-2">旅程倒數</p>
           <div className="flex items-end gap-1">
-            <span className="text-3xl font-black text-primary">5</span>
+            <span className="text-3xl font-black text-primary">{Math.max(0, daysRemaining)}</span>
             <span className="text-sm font-medium text-gray-500 mb-1">天</span>
           </div>
           <div className="w-full bg-gray-200 h-1 rounded-full mt-3 overflow-hidden">

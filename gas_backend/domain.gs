@@ -18,3 +18,16 @@ function buildChecklist_() {
       })),
   }));
 }
+
+function buildItinerary_() {
+  const days = firestoreFetchCollection_('itinerary')
+    .map(mapDoc_)
+    .sort((a, b) => (a.order || 0) - (b.order || 0));
+
+  return days.map(day => ({
+    date: day.date || '',
+    title: day.title || '',
+    activities: day.activities || [], // Array of strings
+    locations: day.locations || []    // Array of objects {name, query}
+  }));
+}

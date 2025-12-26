@@ -1,8 +1,10 @@
 function doGet(e) {
   try {
     const checklist = buildChecklist_();
+    const itinerary = buildItinerary_();
     const data = {
-      checklist: checklist
+      checklist: checklist,
+      itinerary: itinerary
     };
     return ContentService.createTextOutput(JSON.stringify(data))
       .setMimeType(ContentService.MimeType.JSON);
